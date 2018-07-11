@@ -13,15 +13,12 @@ HEADERS={'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/
 sz=['guangmingx','nanshan','futian','luohu','longgang','longhuaq','baoan','pingshanq','yantian']
 
 'https://sz.zu.anjuke.com/fangyuan/nanshan/p50-px3-x1/'
-#'https://shenzhen.anjuke.com/sale/futian/p3/?pi=PZ-baidu-pc-all-esf#filtersort'
 'https://shenzhen.anjuke.com/sale/nanshan/o5-p8/'
 
 url_list=[]
 for i in sz:
     for j in range(1,51)[::-1]:
         url_list.append('https://shenzhen.anjuke.com/sale/'+str(i)+'/o5-p'+str(j))
-#url_list=[['https://sz.zu.anjuke.com/fangyuan/'+str(i)+'/p'+str(j)+'-x1/' for i in sz]for j in range(1,51)]
-#url_list=['https://sz.zu.anjuke.com/fangyuan/nanshan/p'+str(i)+'-x1/'for i in range(1,50)]
 
 
 class Page_downloader():
