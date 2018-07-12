@@ -1,5 +1,6 @@
 import requests
 from lxml.etree import HTML as leh
+import re
 
 HEADERS={'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
  'accept-encoding': 'gzip, deflate, br',
@@ -18,7 +19,7 @@ sz=['guangmingx','nanshan','futian','luohu','longgang','longhuaq','baoan','pings
 url_list=[]
 for i in sz:
     for j in range(1,51)[::-1]:
-        url_list.append('https://shenzhen.anjuke.com/sale/'+str(i)+'/o5-p'+str(j))
+        url_list.append('https://sz.zu.anjuke.com/fangyuan/'+str(i)+'/p'+str(j)+'-px3-x1/')
 
 
 class Page_downloader():
@@ -58,16 +59,35 @@ def download_pages(url_list):
     return text_list
 
 
+# def anal_pages_rent(text):
+#     l=leh(text)
+#     d={
+#         'url':l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-info"]/h3/a/@href'),
+#         'detail':','.join(l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-info"]/p[@class="details-item tag"]/text()')).replace(' ','').split('\n')[1:],
+#         'address':''.join(l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-info"]/address[@class="details-item"]//text()')).replace(' ','').replace('\xa0\xa0\n','-').splitlines()[1:],
+#         'face':l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-info"]/p[@class="details-item bot-tag clearfix"]/span[@class="cls-2"]/text()'),
+#         'price':l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-side"]/p/strong/text()')
+#     }
+#     return d
+
 def anal_pages_rent(text):
     l=leh(text)
+    t=''.join(l.xpath('//ul[@class="house-info-zufang cf"]/li//text()')).replace(' ', '')
+    l=re.split('\n+',t)
     d={
-        'url':l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-info"]/h3/a/@href'),
-        'detail':','.join(l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-info"]/p[@class="details-item tag"]/text()')).replace(' ','').split('\n')[1:],
-        'address':''.join(l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-info"]/address[@class="details-item"]//text()')).replace(' ','').replace('\xa0\xa0\n','-').splitlines()[1:],
-        'face':l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-info"]/p[@class="details-item bot-tag clearfix"]/span[@class="cls-2"]/text()'),
-        'price':l.xpath('//div[@class="zu-itemmod  "]/div[@class="zu-side"]/p/strong/text()')
+        'price':l[1],
+        'structure':l[5],
+        'area':l[7],
+        'face':l[9],
+        'floor':l[11],
+        'decoration':l[13],
+        'type':l[15],
+        'address':'深圳市--'+re.findall('\(.+\)',l[18])[0][1:-1]+'--'+l[17],
+
     }
     return d
+
+
 
 def anal_pages_sale(text):
     l=leh(text)
@@ -79,7 +99,7 @@ def anal_pages_sale(text):
         'face':l.xpath('//div[@class="second-col detail-col"]/dl[3]/dd/text()')[0],
         'floor':l.xpath('//div[@class="second-col detail-col"]/dl[4]/dd/text()')[0].replace('\t',''),
         'price':l.xpath('//div[@class="third-col detail-col"]/dl[1]/dd/text()')[0],
-        'Decoration':l.xpath('//div[@class="third-col detail-col"]/dl[4]/dd/text()')[0],
+        'decoration':l.xpath('//div[@class="third-col detail-col"]/dl[4]/dd/text()')[0],
     }
     return d
 
